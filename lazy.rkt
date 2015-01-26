@@ -1,5 +1,6 @@
 #lang lazy/base
 
-(require lazy/list)
+(require (except-in lazy/list
+                    take))
 (provide (all-from-out lazy/base
                        lazy/list))
