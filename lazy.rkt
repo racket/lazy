@@ -1,6 +1,7 @@
 #lang racket/base
 
-(require (for-syntax racket/base)
+(require (for-syntax racket/base
+                     racket/syntax)
          (for-syntax stepper/private/syntax-property))
 
   ;; ~ = lazy (or delayed)
@@ -275,10 +276,16 @@
                     'stepper-skipto
                     (append skipto/cdr 
                             skipto/first)))])
-         (with-syntax ([(y ...) (generate-temporaries #'(x ...))])
+         (with-syntax* ([(y ...) #;(generate-temporaries #'(x ...))
+                                (for/list ([decl (in-list (syntax->list #'(x ...)))])
+                                  (if (keyword? (syntax->datum decl))
+                                      decl
+                                      (gensym (format "~a" (syntax->datum decl)))))]
+                        [(y-ids ...) (filter (λ (decl) (not (keyword? (syntax->datum decl))))
+                                             (syntax->list #'(y ...)))])
            ;; use syntax/loc for better errors etc
            (with-syntax ([lazy   (syntax/loc stx ((extract-if-lazy-proc p) y ...))]
-                         [strict (syntax/loc stx (p (hidden-! y) ...))])
+                         [strict (syntax/loc stx (p (hidden-! y-ids) ...))])
              (quasisyntax/loc stx
                ((lambda (p y ...)
                   #,($$ #'(if (lazy? p) lazy strict)))
