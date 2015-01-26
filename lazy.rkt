@@ -318,8 +318,6 @@
              [stx (stepper-syntax-property stx 'stepper-skip-double-break #t)])
         stx))
     (syntax-case stx (~)
-      ;; the usual () shorthand for null
-      [(_) #'null]
       [(_ ~ x) (syntax/loc stx (~ x))] ; not really needed
       [(_ f x ...)
        (cond [(let ([f #'f])
