@@ -276,11 +276,10 @@
                     'stepper-skipto
                     (append skipto/cdr 
                             skipto/first)))])
-         (with-syntax* ([(y ...) #;(generate-temporaries #'(x ...))
-                                (for/list ([decl (in-list (syntax->list #'(x ...)))])
-                                  (if (keyword? (syntax->datum decl))
-                                      decl
-                                      (gensym (format "~a" (syntax->datum decl)))))]
+         (with-syntax* ([(y ...) (for/list ([decl (in-list (syntax->list #'(x ...)))])
+                                   (if (keyword? (syntax->datum decl))
+                                       decl
+                                       (generate-temporary decl)))]
                         [(y-ids ...) (filter (λ (decl) (not (keyword? (syntax->datum decl))))
                                              (syntax->list #'(y ...)))])
            ;; use syntax/loc for better errors etc
