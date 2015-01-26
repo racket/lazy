@@ -700,9 +700,6 @@
   (define* empty null)
   (define* (empty? x) (null? (! x)))
 
-  (require (only-in racket/list [last-pair !last-pair]))
-  (define* (last-pair list) (!last-pair (!list list)))
-
   (define (do-remove name item list =)
     (let ([= (! =)])
       (let loop ([list (! list)])
@@ -739,8 +736,11 @@
       (let loop ([list (! list)])
         (cond [(null? list) #f]
               [(not (pair? list)) (error 'memf "not a proper list: ~e" list)]
-              [(!*app pred (car list)) list]
+              [(! (!*app pred (car list))) list]
               [else (loop (! (cdr list)))]))))
+
+  (define* (findf pred list)
+    (~car (memf pred list)))
 
   (define* (assf pred alist)
     (let ([pred (! pred)])
@@ -841,7 +841,7 @@
    strict-call lazy-call
    ;; `list' stuff
    first second third fourth fifth sixth seventh eighth rest cons? empty empty?
-   foldl foldr last-pair remove remq remv remove* remq* remv* memf assf filter
+   foldl foldr remove remq remv remove* remq* remv* memf findf assf filter
    sort
    ;; `etc' stuff
    true false boolean=? symbol=? identity compose build-list
