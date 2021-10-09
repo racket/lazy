@@ -33,3 +33,6 @@
 (define pkg-desc "The implementation of the Lazy Racket language")
 
 (define pkg-authors '(eli stchang))
+
+(define license
+  '(Apache-2.0 OR MIT))
