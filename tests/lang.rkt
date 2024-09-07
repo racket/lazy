@@ -25,6 +25,14 @@
    (! (= 1.0 1)) => #t
    (! (equal? (list 1.0) (list 1.0))) => #t
    (! (letrec ([zs (cons 0 zs)]) (equal? (list zs zs) (list zs zs)))) => #t
+   (! (let () ; this tests functions defined with the curried function shorthand
+        (define acc 0)
+
+        (define (((iffn cond) iftrue) iffalse)
+          (if cond iftrue iffalse))
+
+        (((iffn (< 1 1)) (set! acc (+ acc 1))) (set! acc (+ acc 1)))
+        acc)) => 1
    ))
 
 (define (list-tests)
