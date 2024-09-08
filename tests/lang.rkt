@@ -168,7 +168,7 @@
   ; function used in tests for curried functions defined with
   ; the shorthand syntax
   (define (((iffn cond) iftrue) iffalse)
-          (if cond iftrue iffalse))
+    (if cond iftrue iffalse))
   (test
    (! (and (/ 1 0))) =error> "/: division by zero"
    (! (and #f (/ 1 0))) => #f
