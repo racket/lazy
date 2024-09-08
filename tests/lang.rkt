@@ -165,6 +165,10 @@
    (!! (take 10 F)) => '(0 0 1 0 2 1 3 0 4 2)))
 
 (define (strictness-tests)
+  ; function used in tests for curried functions defined with
+  ; the shorthand syntax
+  (define (((iffn cond) iftrue) iffalse)
+    (if cond iftrue iffalse))
   (test
    (! (and (/ 1 0))) =error> "/: division by zero"
    (! (and #f (/ 1 0))) => #f
@@ -200,6 +204,10 @@
    (! (andmap (/ 1 0) '())) =error> "/: division by zero"
    (! (andmap (/ 1 0) '(1))) =error> "/: division by zero"
    (! (andmap 1 (/ 1 0))) =error> "/: division by zero"
+   (! (((iffn #f) (/ 1 0)) 1)) => 1
+   (! (((iffn #t) (/ 1 0)) 1)) =error> "/: division by zero"
+   (! (((iffn #f) 1) (/ 1 0))) =error> "/: division by zero"
+   (! (((iffn #t) 1) (/ 1 0))) => 1
    ))
 
 (define (values-tests)

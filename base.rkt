@@ -173,7 +173,7 @@
     (syntax-case stx ()
       [(_ (f . args) body0 body ...)
        (quasisyntax/loc stx
-         (define f 
+         (~define f 
            (lazy-proc
             #,(attach-inferred-name
                #'(lambda args (~begin body0 body ...))
